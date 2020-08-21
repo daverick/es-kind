@@ -1,0 +1,29 @@
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: heartbeat
+spec:
+  type: heartbeat
+  version: 7.9.0
+  elasticsearchRef:
+    name: elasticsearch
+  config:
+    http:
+      enabled: true
+      host: 0.0.0.0
+    heartbeat.monitors:
+    - type: tcp
+      schedule: '@every 5s'
+      hosts: ["elasticsearch-es-http.default.svc:9200"]
+    - type: tcp
+      schedule: '@every 5s'
+      hosts: ["kibana-kb-http.default.svc:5601"]
+  deployment:
+    podTemplate:
+      metadata:
+        labels:
+          scrape: hb
+      spec:
+        dnsPolicy: ClusterFirstWithHostNet
+        securityContext:
+          runAsUser: 0
