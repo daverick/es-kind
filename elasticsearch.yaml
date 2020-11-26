@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 7.9.0
+  version: 7.10.0
   nodeSets:
   - name: hot
     count: 2
@@ -52,6 +52,15 @@ spec:
                   operator: In
                   values:
                   - hot
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi
   - name: warm
     count: 2
     config:
@@ -63,6 +72,15 @@ spec:
       node.attr.temp: warm
       xpack.monitoring.collection.enabled: true
       xpack.monitoring.elasticsearch.collection.enabled: false
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
     podTemplate:
       metadata:
         labels:

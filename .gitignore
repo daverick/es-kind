@@ -1,1 +1,4 @@
-kind
+kind*
+.DS_Store
+es-kind.code-workspace
+eck-operator*

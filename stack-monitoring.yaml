@@ -1,3 +1,4 @@
+#based on and extend https://github.com/elastic/cloud-on-k8s/blob/master/config/recipes/beats/stack_monitoring.yaml
 ---
 # metricbeat resources
 apiVersion: beat.k8s.elastic.co/v1beta1
@@ -6,7 +7,7 @@ metadata:
   name: metricbeat-stack-monitoring
 spec:
   type: metricbeat
-  version: 7.9.0
+  version: 7.10.0
   elasticsearchRef:
     name: elasticsearch
   config:

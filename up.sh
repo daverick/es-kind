@@ -6,8 +6,8 @@ echo "Deleting a kind cluster named elastic..."
 echo "Creating a kind cluster named elastic..."
 ./kind create cluster --config kind-config.yaml --name elastic
 
-echo "Applying ECK operator 1.2 ..."
-kubectl apply -f eck-operator-1.2.yaml 
+echo "Applying ECK operator 1.3 ..."
+kubectl apply -f eck-operator-1.3.yaml 
 
 kubectl wait --timeout=60s --for condition=ready pod --selector='control-plane=elastic-operator' --namespace elastic-system
 
@@ -24,6 +24,9 @@ until [ "$($ES_STATUS_CMD)" = "green" ] || [ $ATTEMPTS -eq 60 ]; do
   sleep 10
   echo "Waiting for elasticsearch to be ready..."
 done
+
+echo "putting a trial license..."
+./put-a-trial-license.sh
 
 echo "Applying kibana.yaml ..."
 
