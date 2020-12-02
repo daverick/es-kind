@@ -8,9 +8,13 @@ spec:
   - name: hot
     count: 2
     config:
-      node.master: true
-      node.data: true
-      node.ingest: true
+      node.roles: 
+        - master
+        - ingest
+        - ml
+        - transform
+        - data_hot
+      xpack.ml.enabled: true
       node.store.allow_mmap: false
       xpack.security.enabled: true
       node.attr.temp: hot
@@ -64,9 +68,14 @@ spec:
   - name: warm
     count: 2
     config:
-      node.master: true
-      node.data: true
-      node.ingest: true
+      node.roles: 
+        - master
+        - ingest
+        - ml
+        - transform
+        - data_content
+        - data_warm
+      xpack.ml.enabled: true
       node.store.allow_mmap: false
       xpack.security.enabled: true
       node.attr.temp: warm
