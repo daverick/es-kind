@@ -1,0 +1,32 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana-1
+spec:
+  version: 7.10.0
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch-1
+  config:
+    # https://www.elastic.co/guide/en/kibana/current/monitoring-metricbeat.html
+    elasticsearch.customHeaders:
+      x-opaque-id: kibana
+    xpack.monitoring.collection.enabled: true
+    monitoring.kibana.collection.enabled: false
+  podTemplate:
+    metadata:
+      labels:
+        scrape: kb
+      annotations:
+        co.elastic.logs/enabled: "true"
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 0.5
+          limits:
+            memory: 1Gi
+            cpu: 2
+

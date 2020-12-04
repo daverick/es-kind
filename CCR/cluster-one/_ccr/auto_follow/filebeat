@@ -1,0 +1,8 @@
+{
+  "remote_cluster" : "cluster-two",
+  "leader_index_patterns" :
+  [
+    "filebeat-*"
+  ],
+  "follow_index_pattern" : "two-{{leader_index}}" 
+}

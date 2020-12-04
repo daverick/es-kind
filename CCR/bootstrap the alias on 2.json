@@ -1,0 +1,8 @@
+PUT %3Cfilebeat-7.10.0-%7Bnow%2Fd%7D-000001%3E
+{
+  "aliases": {
+    "filebeat-7.10.0": {
+      "is_write_index": true
+    }
+  }
+}
