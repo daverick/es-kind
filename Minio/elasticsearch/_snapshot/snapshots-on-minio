@@ -1,0 +1,7 @@
+{
+    "type" : "s3",
+    "settings" : {
+      "bucket" : "elasticsearch-snapshots",
+      "client" : "my-minio"
+    }
+}

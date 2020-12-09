@@ -1,0 +1,9 @@
+{
+  "index_patterns": [
+    "data-tier*"
+  ],
+  "data_stream": {},
+  "composed_of": [
+    "data-tier-policy"
+  ]
+}

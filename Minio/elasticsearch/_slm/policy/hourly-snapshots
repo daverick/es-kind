@@ -1,0 +1,13 @@
+{
+  "name": "<hourly-snapshots-{now/h}>",
+  "schedule": "0 0 * * * ?",
+  "repository": "snapshots-on-minio",
+  "config": {
+    "ignore_unavailable": true
+  },
+  "retention": {
+    "expire_after": "2d",
+    "min_count": 1,
+    "max_count": 50
+  }
+}

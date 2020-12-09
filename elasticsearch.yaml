@@ -4,22 +4,28 @@ metadata:
   name: elasticsearch
 spec:
   version: 7.10.0
+  secureSettings:
+  - secretName: minio
   nodeSets:
   - name: hot
     count: 2
-    config:
+    config:  # specific elasticsearch config
       node.roles: 
         - master
         - ingest
         - ml
         - transform
-        - data_hot
+        - data_hot  
+      node.attr.temp: hot
+    config: &common-elastisearch-config #common elasticsearch config
       xpack.ml.enabled: true
       node.store.allow_mmap: false
       xpack.security.enabled: true
-      node.attr.temp: hot
       xpack.monitoring.collection.enabled: true
       xpack.monitoring.elasticsearch.collection.enabled: false
+      s3.client.my-minio.endpoint: minio-service.default.svc:9000
+      s3.client.my-minio.protocol: http 
+      s3.client.my-minio.path_style_access: true
     podTemplate:
       metadata:
         labels:
@@ -67,7 +73,7 @@ spec:
             storage: 500Mi
   - name: warm
     count: 2
-    config:
+    config: # specific elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -75,12 +81,9 @@ spec:
         - transform
         - data_content
         - data_warm
-      xpack.ml.enabled: true
-      node.store.allow_mmap: false
-      xpack.security.enabled: true
       node.attr.temp: warm
-      xpack.monitoring.collection.enabled: true
-      xpack.monitoring.elasticsearch.collection.enabled: false
+    config: 
+      <<: *common-elastisearch-config #common elasticsearch config
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -130,3 +133,72 @@ spec:
                   operator: In
                   values:
                   - warm
+  - name: cold
+    count: 2
+    config: # specific elasticsearch config
+      node.roles: 
+        - master
+        - ingest
+        - ml
+        - transform
+        - data_cold
+      node.attr.temp: cold
+    config: 
+      <<: *common-elastisearch-config #common elasticsearch config
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+    podTemplate:
+      metadata:
+        labels:
+          scrape: es
+        annotations:
+          co.elastic.logs/enabled: "true"
+      spec:
+        initContainers:
+          - name: install-plugins
+            command:
+            - sh
+            - -c
+            - |
+              /usr/share/elasticsearch/bin/elasticsearch-plugin list | grep repository-s3
+              [[ $? -ne 0 ]] && /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-s3 || true
+          - name: sysctl
+            securityContext:
+              privileged: true
+            command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        containers:
+          - name: elasticsearch
+            env:
+            - name: ES_JAVA_OPTS
+              value: -Xms1g -Xmx1g
+            resources:
+              requests:
+                memory: 2Gi
+                cpu: 0.5
+              limits:
+                memory: 2Gi
+                cpu: 2
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: temp
+                  operator: In
+                  values:
+                  - warm
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio
+data:
+  s3.client.my-minio.secret_key: TjAxR2Y4MTZ4REZmczc4NmU2UEg5bllLCg==
+  s3.client.my-minio.access_key: bWluaW8K
