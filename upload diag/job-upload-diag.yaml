@@ -1,0 +1,26 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: eck-diag
+spec:
+  template:
+    spec:
+      containers:
+        - name: eck-diag-job
+          image: jdel12/eckdiag:v22
+          env:
+          - name: ECK_DIAG_PORT
+            value: "9200"
+          - name: ECK_DIAG_USER
+            value: "elastic"
+          - name: ECK_DIAG_HOST
+            value: "elasticsearch-es-http"
+          - name: ECK_DIAG_PASS
+            valueFrom:
+              secretKeyRef:
+               name: "elasticsearch-es-elastic-user"
+               key: elastic
+          - name: UPLOAD_ID
+            value: "c204df8e-11fa-4a2e-91da-91cd50d39c0d"
+      restartPolicy: Never
