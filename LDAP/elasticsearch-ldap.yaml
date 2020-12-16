@@ -1,0 +1,57 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch-ldap
+spec:
+  version: 7.10.0
+  secureSettings:
+    - secretName: my-ldap
+  nodeSets:
+  - name: simple
+    count: 1
+    config: 
+      node.store.allow_mmap: false
+      xpack.security.enabled: true
+      xpack.security.authc.realms.ldap.my-ldap:
+                  order: 2
+                  url: "ldap://ldap.forumsys.com"
+                  bind_dn: "cn=read-only-admin,dc=example,dc=com"
+                  user_search:
+                    base_dn: "dc=example,dc=com"
+                  group_search:
+                    base_dn: "dc=example,dc=com"
+    podTemplate:
+      metadata:
+        labels:
+          scrape: es
+        annotations:
+          co.elastic.logs/enabled: "true"
+      spec:
+        containers:
+        - name: elasticsearch
+          env: 
+          - name: ES_JAVA_OPTS
+            value: -Xms1g -Xmx1g
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 0.5
+            limits:
+              memory: 2Gi
+              cpu: 2
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-ldap-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-ldap
+data:
+  xpack.security.authc.realms.ldap.my-ldap.secure_bind_password: cGFzc3dvcmQ=

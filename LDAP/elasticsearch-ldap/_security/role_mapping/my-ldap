@@ -1,0 +1,16 @@
+{
+    "enabled" : true,
+    "roles" : [
+      "kibana_admin"
+    ],
+    "rules" : {
+      "all" : [
+        {
+          "field" : {
+            "realm.name" : "my-ldap"
+          }
+        }
+      ]
+    },
+    "metadata" : { }
+  }

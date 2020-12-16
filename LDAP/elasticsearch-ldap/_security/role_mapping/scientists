@@ -1,0 +1,21 @@
+{
+    "enabled" : true,
+    "roles" : [
+      "scientists"
+    ],
+    "rules" : {
+      "all" : [
+        {
+          "field" : {
+            "realm.name" : "my-ldap"
+          }
+        },
+        {
+          "field" : {
+            "groups" : "ou=scientists,dc=example,dc=com"
+          }
+        }
+      ]
+    },
+    "metadata" : { }
+  }
