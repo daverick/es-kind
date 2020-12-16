@@ -11,7 +11,7 @@ Execute in this order:
 * `up.sh` start the `elasticsearch-ldap` cluster, it will be available on [https://localhost:9204]
 * `load.sh` that loads a scientist role, a role mapping and a index in the cluster
 
-## Test it!
+## Test it!
 
 `newton` is a scientist so he can search `science*` but not `gauss`
 
