@@ -1,6 +1,6 @@
 # CCR on ECK for filebeat!
 
-## Description
+## Description
 
 Theses files create two Elasticsearch clusters in the same ECK, allow remote cluster between them. Some `_ccr/auto_follow`  are set up on filebeat indices.
 Some k8s jobs allow filebeat to be setup ilm, templates and so on.
