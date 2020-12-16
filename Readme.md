@@ -3,10 +3,10 @@
 ## Requirements
 
 * Install [kind](https://kind.sigs.k8s.io) in this folder. Tested with kind version 0.8.1 .
-* Having Docker. Tested with Docker version 19.03.12 .
-* Have eck-operator-1.3.yaml in this folder ( from https://download.elastic.co/downloads/eck/1.3.0/all-in-one.yaml)
+* Having Docker. Tested with Docker version 19.03.12->20.10.0.
+* Have `eck-operator-1.3.yaml` in this folder ( from https://download.elastic.co/downloads/eck/1.3.0/all-in-one.yaml)
 
-Tested on MacOS Catalina 10.15.6
+Tested on MacOS Catalina 10.15.6/10.15.7
 
 ## Usage
 
