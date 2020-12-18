@@ -11,7 +11,7 @@ Execute in this order:
 * `up Minio.sh` start a Minio service in Kubernetes
 * `load.sh` load snapshots repository, slm, ilm, components templates and index templates in the Elasticsearch cluster
 
-## Demo script
+## Demo script
 
 ```JSON
 
