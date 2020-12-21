@@ -1,0 +1,40 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: elasticsearch-simple
+spec:
+  version: 7.10.0
+  nodeSets:
+  - name: simple
+    count: 1
+    config: 
+      node.store.allow_mmap: false
+      xpack.security.enabled: true
+    podTemplate:
+      metadata:
+        labels:
+          scrape: es
+        annotations:
+          co.elastic.logs/enabled: "true"
+      spec:
+        containers:
+        - name: elasticsearch
+          env: 
+          - name: ES_JAVA_OPTS
+            value: -Xms1g -Xmx1g
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 0.5
+            limits:
+              memory: 2Gi
+              cpu: 2
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-simple-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Mi
