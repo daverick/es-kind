@@ -18,8 +18,6 @@ spec:
     # https://www.elastic.co/guide/en/kibana/current/monitoring-metricbeat.html
     elasticsearch.customHeaders:
       x-opaque-id: kibana
-    xpack.monitoring.collection.enabled: true
-    monitoring.kibana.collection.enabled: false
   podTemplate:
     metadata:
       labels:
