@@ -4,7 +4,7 @@
 
 * Install [kind](https://kind.sigs.k8s.io) in this folder. Tested with kind version 0.11.1 .
 * Having Docker. Tested with Docker version 19.03.12->20.10.7.
-* Have `eck-operator-1.5.yaml` in this folder ( from https://download.elastic.co/downloads/eck/1.5.0/all-in-one.yaml)
+* Have `crds.yaml` from [https://download.elastic.co/downloads/eck/1.8.0/crds.yaml] and `operator.yaml` from [https://download.elastic.co/downloads/eck/1.8.0/operator.yaml] in this folder ( you can use  `curl https://download.elastic.co/downloads/eck/1.8.0/operator.yaml -o operator.yaml`and `curl https://download.elastic.co/downloads/eck/1.8.0/crds.yaml -o crds.yaml` to download them).
 
 Tested on MacOS Catalina 10.15.6->11.6
 

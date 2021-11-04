@@ -2,3 +2,5 @@ kind*
 .DS_Store
 es-kind.code-workspace
 eck-operator*
+crds.yaml
+operator.yaml
