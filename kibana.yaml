@@ -3,10 +3,17 @@ kind: Kibana
 metadata:
   name: kibana
 spec:
-  version: 7.12.1
+  version: 7.15.1
   count: 2
   elasticsearchRef:
     name: elasticsearch
+  monitoring:
+    metrics:
+      elasticsearchRefs:
+      - name: monitoring-cluster
+    logs:
+      elasticsearchRefs:
+      - name: monitoring-cluster
   config:
     # https://www.elastic.co/guide/en/kibana/current/monitoring-metricbeat.html
     elasticsearch.customHeaders:

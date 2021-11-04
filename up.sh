@@ -13,6 +13,30 @@ kubectl apply -f operator.yaml
 
 kubectl wait --timeout=60s --for condition=ready pod --selector='control-plane=elastic-operator' --namespace elastic-system
 
+echo "putting a trial license..."
+./put-a-trial-license.sh
+
+echo "Applying monitoring-cluster.yaml ..."
+kubectl apply -f monitoring-cluster.yaml 
+
+echo "Waiting for monitoring-cluster to be ready... ⏳🚦"
+ATTEMPTS=0
+ES_STATUS_CMD="kubectl get  elasticsearch monitoring-cluster -o=jsonpath={.status.health}"
+until [ "$($ES_STATUS_CMD)" = "green" ] || [ $ATTEMPTS -eq 60 ]; do
+  ATTEMPTS=$((attempts + 1))
+  sleep 10
+  echo "Waiting for monitoring-cluster to be ready..."
+done
+
+echo "Waiting for monitoring kibana to be ready... ⏳🚦"
+ATTEMPTS=0
+KB_STATUS_CMD="kubectl get  kibana monitoring-kibana -o=jsonpath={.status.health}"
+until [ "$($KB_STATUS_CMD)" = "green" ] || [ $ATTEMPTS -eq 60 ]; do
+  ATTEMPTS=$((attempts + 1))
+  sleep 10
+  echo "Waiting for monitoring kibana  to be ready..."
+done
+
 echo "Applying elasticsearch.yaml ..."
 kubectl apply -f elasticsearch.yaml 
 
@@ -26,9 +50,6 @@ until [ "$($ES_STATUS_CMD)" = "green" ] || [ $ATTEMPTS -eq 60 ]; do
   sleep 10
   echo "Waiting for elasticsearch to be ready..."
 done
-
-echo "putting a trial license..."
-./put-a-trial-license.sh
 
 echo "Applying kibana.yaml ..."
 
@@ -48,8 +69,8 @@ done
 echo "Getting password and creatin port-forward ..."
 ./port-forward_and_password.sh
 
-echo "Applying stack-monitoring.yaml ..."
-kubectl apply -f stack-monitoring.yaml
+echo "Getting password and creatin port-forward for monitoring cluster..."
+./port-forward_and_password-monitoring-cluster.sh
 
 echo "Applying heartbeat.yaml ..."
 kubectl apply -f heartbeat.yaml

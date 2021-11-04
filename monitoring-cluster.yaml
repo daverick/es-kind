@@ -1,0 +1,67 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: monitoring-cluster
+spec:
+  version: 7.15.1
+  nodeSets:
+  - name: main
+    count: 1
+    config:  # specific elasticsearch config
+      node.roles: 
+        - master
+        - ingest
+        - ml
+        - transform
+        - data
+        - remote_cluster_client
+      xpack.ml.enabled: true
+      node.store.allow_mmap: false
+      xpack.security.enabled: true
+      xpack.monitoring.collection.enabled: true
+      xpack.monitoring.elasticsearch.collection.enabled: false
+    podTemplate:
+      spec:
+        containers:
+        - name: elasticsearch
+          env: 
+          - name: ES_JAVA_OPTS
+            value: -Xms1g -Xmx1g
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 0.5
+            limits:
+              memory: 2Gi
+              cpu: 2
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Mi
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: monitoring-kibana
+spec:
+  version: 7.15.1
+  count: 1
+  elasticsearchRef:
+    name: monitoring-cluster
+  config:
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 0.5
+          limits:
+            memory: 1Gi
+            cpu: 2

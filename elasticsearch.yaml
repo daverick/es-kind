@@ -3,9 +3,16 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 7.12.1
+  version: 7.15.1
   secureSettings:
   - secretName: minio
+  monitoring:
+    metrics:
+      elasticsearchRefs:
+      - name: monitoring-cluster
+    logs:
+      elasticsearchRefs:
+      - name: monitoring-cluster
   nodeSets:
   - name: hot
     count: 2
@@ -15,7 +22,8 @@ spec:
         - ingest
         - ml
         - transform
-        - data_hot  
+        - data_hot
+        - remote_cluster_client
       node.attr.temp: hot
     config: &common-elastisearch-config #common elasticsearch config
       xpack.ml.enabled: true
