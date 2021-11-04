@@ -3,7 +3,7 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  mage: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -11,7 +11,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "temp=warm"
-  mage: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -19,7 +19,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "temp=warm"
-  mage: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -27,7 +27,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "temp=hot"
-  mage: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -35,4 +35,4 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "temp=hot"
-  mage: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
+  image: kindest/node:v1.22.0@sha256:b8bda84bb3a190e6e028b1760d277454a72267a5454b57db34437c34a588d047
