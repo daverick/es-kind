@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 7.15.1
+  version: 7.17.3
   secureSettings:
   - secretName: minio
   monitoring:
@@ -16,7 +16,7 @@ spec:
   nodeSets:
   - name: hot
     count: 2
-    config:  # specific elasticsearch config
+    config:  # specific elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -81,7 +81,7 @@ spec:
             storage: 500Mi
   - name: warm
     count: 2
-    config: # specific elasticsearch config
+    config: # specific elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -143,7 +143,7 @@ spec:
                   - warm
   - name: cold
     count: 2
-    config: # specific elasticsearch config
+    config: # specific elasticsearch config
       node.roles: 
         - master
         - ingest
