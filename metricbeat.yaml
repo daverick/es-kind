@@ -4,11 +4,9 @@ metadata:
   name: metricbeat
 spec:
   type: metricbeat
-  version: 7.12.1
+  version: 7.17.3
   elasticsearchRef:
     name: elasticsearch
-  kibanaRef:
-    name: kibana
   config:
     http:
       enabled: true
