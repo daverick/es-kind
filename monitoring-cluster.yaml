@@ -3,11 +3,11 @@ kind: Elasticsearch
 metadata:
   name: monitoring-cluster
 spec:
-  version: 7.15.1
+  version: 7.17.5
   nodeSets:
   - name: main
     count: 1
-    config:  # specific elasticsearch config
+    config:  # specific elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -49,7 +49,7 @@ kind: Kibana
 metadata:
   name: monitoring-kibana
 spec:
-  version: 7.15.1
+  version: 7.17.5
   count: 1
   elasticsearchRef:
     name: monitoring-cluster

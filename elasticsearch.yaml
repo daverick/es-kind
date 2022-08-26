@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 7.17.3
+  version: 7.17.5
   secureSettings:
   - secretName: minio
   monitoring:
@@ -61,15 +61,17 @@ spec:
             limits:
               memory: 2Gi
               cpu: 2
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: temp
-                  operator: In
-                  values:
-                  - hot
+        nodeSelector: 
+          temp: hot
+        # affinity:
+        #   nodeAffinity:
+        #     requiredDuringSchedulingIgnoredDuringExecution:
+        #       nodeSelectorTerms:
+        #       - matchExpressions:
+        #         - key: temp
+        #           operator: In
+        #           values:
+        #           - hot
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
