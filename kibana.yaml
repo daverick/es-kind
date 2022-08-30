@@ -3,8 +3,8 @@ kind: Kibana
 metadata:
   name: kibana
 spec:
-  version: 7.17.5
-  count: 2
+  version: 8.4.0
+  count: 1
   elasticsearchRef:
     name: elasticsearch
   monitoring:
@@ -18,6 +18,318 @@ spec:
     # https://www.elastic.co/guide/en/kibana/current/monitoring-metricbeat.html
     elasticsearch.customHeaders:
       x-opaque-id: kibana
+    xpack.fleet.agents.elasticsearch.hosts: ["https://elasticsearch-es-http.default.svc:9200"]
+    xpack.fleet.agents.fleet_server.hosts: ["https://fleet-server-agent-http.default.svc:8220"]
+    xpack.fleet.packages:
+    - name: system
+      version: latest
+    - name: elastic_agent
+      version: latest
+    - name: fleet_server
+      version: latest
+    # - name: kubernetes
+    #   version: latest
+    # - name: cloud_security_posture
+    #   version: latest
+    xpack.fleet.agentPolicies:
+    - name: Fleet Server on ECK policy
+      id: eck-fleet-server
+      namespace: default
+      monitoring_enabled:
+      - logs
+      - metrics
+      unenroll_timeout: 900
+      is_default_fleet_server: true
+      package_policies:
+      - name: fleet_server-1
+        id: fleet_server-1
+        package:
+          name: fleet_server
+    # - name: K8s Observability (daemonSet) policy
+    #   id: k8s-observability-ds
+    #   namespace: default
+    #   monitoring_enabled:
+    #   - logs
+    #   - metrics
+    #   unenroll_timeout: 900
+    #   package_policies:
+    #   - package:
+    #       name: system
+    #     name: system-1
+    #   - package:
+    #       name: kubernetes
+    #     name: kubernetes-ds
+    # - name: K8s Observability (metrics) policy
+    #   id: k8s-observability-metrics
+    #   namespace: default
+    #   monitoring_enabled:
+    #   - logs
+    #   - metrics
+    #   unenroll_timeout: 900
+    #   package_policies:
+    #   - name: kubernetes-metrics
+    #     package.name: kubernetes
+    #     inputs:
+    #       - type: kubernetes/metrics
+    #         enabled: true
+    #         streams:
+    #           - data_stream:
+    #               dataset: kubernetes.state_container
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_cronjob
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_daemonset
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_deployment
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_job
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_node
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_persistentvolume
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_persistentvolumeclaim
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_pod
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_replicaset
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_resourcequota
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_service
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_statefulset
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #           - data_stream:
+    #               dataset: kubernetes.state_storageclass
+    #               type: metrics
+    #             vars:
+    #             - name: hosts
+    #               value: 
+    #               - 'metrics-server:443'
+    #       - type: kubernetes/metrics
+    #         enabled: false
+    #         streams:
+    #           - data_stream:
+    #               dataset: kubernetes.container
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.node
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.pod
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.system
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.system
+    #               type: volume
+    #           - data_stream:
+    #               dataset: kubernetes.apiserver
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.proxy
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.scheduler
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.controllermanager
+    #               type: metrics
+    #           - data_stream:
+    #               dataset: kubernetes.event
+    #               type: metrics
+    #       - type: filestream
+    #         enabled: false
+    #         streams:
+    #           - data_stream:
+    #               dataset: kubernetes.container_logs
+    #               type: filestream
+    #           - data_stream:
+    #               dataset: kubernetes.audit_logs
+    #               type: filestream
+    # - name: KSPM policy
+    #   id: k8s-security-kspm
+    #   namespace: default
+    #   monitoring_enabled:
+    #   - logs
+    #   - metrics
+    #   unenroll_timeout: 900
+    #   package_policies:
+    #   - name: cloud_security_posture
+    #     package.name: cloud_security_posture
+    #     inputs:
+    #     - type: cloudbeat/vanilla
+    #       streams:
+    #         - data_stream:
+    #             dataset: cloud_security_posture.findings
+    #             type: logs
+    #           vars:
+    #           - name: data_yaml
+    #             value:
+    #               activated_rules:
+    #                 cis_k8s:
+    #                   - cis_1_2_18
+    #                   - cis_1_2_20
+    #                   - cis_1_2_19
+    #                   - cis_1_2_16
+    #                   - cis_1_2_32
+    #                   - cis_1_1_15
+    #                   - cis_4_2_6
+    #                   - cis_4_1_10
+    #                   - cis_1_1_12
+    #                   - cis_1_1_3
+    #                   - cis_5_2_8
+    #                   - cis_5_2_5
+    #                   - cis_1_2_15
+    #                   - cis_1_2_29
+    #                   - cis_1_1_14
+    #                   - cis_5_1_5
+    #                   - cis_4_2_2
+    #                   - cis_1_1_2
+    #                   - cis_1_2_24
+    #                   - cis_4_1_5
+    #                   - cis_1_1_11
+    #                   - cis_1_2_14
+    #                   - cis_5_2_4
+    #                   - cis_1_1_20
+    #                   - cis_2_3
+    #                   - cis_4_2_12
+    #                   - cis_1_2_25
+    #                   - cis_1_4_2
+    #                   - cis_4_2_4
+    #                   - cis_1_2_27
+    #                   - cis_1_1_18
+    #                   - cis_4_2_8
+    #                   - cis_2_6
+    #                   - cis_1_2_5
+    #                   - cis_1_1_21
+    #                   - cis_1_4_1
+    #                   - cis_4_1_9
+    #                   - cis_1_1_1
+    #                   - cis_1_1_5
+    #                   - cis_2_1
+    #                   - cis_1_2_2
+    #                   - cis_1_1_16
+    #                   - cis_5_1_6
+    #                   - cis_2_4
+    #                   - cis_4_1_6
+    #                   - cis_5_2_9
+    #                   - cis_1_1_17
+    #                   - cis_1_1_19
+    #                   - cis_1_2_7
+    #                   - cis_1_1_6
+    #                   - cis_1_3_5
+    #                   - cis_4_1_2
+    #                   - cis_5_2_3
+    #                   - cis_1_2_21
+    #                   - cis_1_2_4
+    #                   - cis_5_1_3
+    #                   - cis_4_2_9
+    #                   - cis_4_1_1
+    #                   - cis_1_2_12
+    #                   - cis_1_2_6
+    #                   - cis_1_2_13
+    #                   - cis_1_2_26
+    #                   - cis_4_2_1
+    #                   - cis_4_2_3
+    #                   - cis_2_2
+    #                   - cis_1_3_6
+    #                   - cis_2_5
+    #                   - cis_5_2_7
+    #                   - cis_5_2_6
+    #                   - cis_1_2_23
+    #                   - cis_1_1_8
+    #                   - cis_5_2_2
+    #                   - cis_5_2_10
+    #                   - cis_1_2_10
+    #                   - cis_1_2_8
+    #                   - cis_1_2_11
+    #                   - cis_4_2_11
+    #                   - cis_4_2_5
+    #                   - cis_4_2_10
+    #                   - cis_4_2_7
+    #                   - cis_1_2_17
+    #                   - cis_1_3_4
+    #                   - cis_1_2_28
+    #                   - cis_1_2_22
+    #                   - cis_1_2_9
+    #                   - cis_1_3_2
+    #                   - cis_1_3_7
+    #                   - cis_1_3_3
+    #                   - cis_1_1_4
+    #                   - cis_1_1_7
+    #                   - cis_4_2_13
+    #                   - cis_1_1_13
+    #                 cis_eks: []
+    #           - name: processors
+    #             value:
+    #               - add_cluster_id: null
   podTemplate:
     metadata:
       labels:
@@ -34,4 +346,5 @@ spec:
           limits:
             memory: 1Gi
             cpu: 2
+
 

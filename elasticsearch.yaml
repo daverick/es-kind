@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch
 spec:
-  version: 7.17.5
+  version: 8.4.0
   secureSettings:
   - secretName: minio
   monitoring:
@@ -16,7 +16,7 @@ spec:
   nodeSets:
   - name: hot
     count: 2
-    config:  # specific elasticsearch config
+    config:  &elastisearch-config #elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -25,10 +25,8 @@ spec:
         - data_hot
         - remote_cluster_client
       node.attr.temp: hot
-    config: &common-elastisearch-config #common elasticsearch config
       xpack.ml.enabled: true
       node.store.allow_mmap: false
-      xpack.security.enabled: true
       xpack.monitoring.collection.enabled: true
       xpack.monitoring.elasticsearch.collection.enabled: false
       s3.client.my-minio.endpoint: minio-service.default.svc:9000
@@ -42,13 +40,10 @@ spec:
           co.elastic.logs/enabled: "true"
       spec:
         initContainers:
-        - name: install-plugins
-          command:
-          - sh
-          - -c
-          - |
-            /usr/share/elasticsearch/bin/elasticsearch-plugin list | grep repository-s3
-            [[ $? -ne 0 ]] && /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-s3 || true
+          - name: sysctl
+            securityContext:
+              privileged: true
+            command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
         containers:
         - name: elasticsearch
           env: 
@@ -83,7 +78,8 @@ spec:
             storage: 500Mi
   - name: warm
     count: 2
-    config: # specific elasticsearch config
+    config:
+      <<: *elastisearch-config #elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -92,8 +88,6 @@ spec:
         - data_content
         - data_warm
       node.attr.temp: warm
-    config: 
-      <<: *common-elastisearch-config #common elasticsearch config
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -111,13 +105,6 @@ spec:
           co.elastic.logs/enabled: "true"
       spec:
         initContainers:
-          - name: install-plugins
-            command:
-            - sh
-            - -c
-            - |
-              /usr/share/elasticsearch/bin/elasticsearch-plugin list | grep repository-s3
-              [[ $? -ne 0 ]] && /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-s3 || true
           - name: sysctl
             securityContext:
               privileged: true
@@ -134,18 +121,12 @@ spec:
               limits:
                 memory: 2Gi
                 cpu: 2
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: temp
-                  operator: In
-                  values:
-                  - warm
+        nodeSelector: 
+          temp: warm
   - name: cold
     count: 2
-    config: # specific elasticsearch config
+    config:  
+      <<: *elastisearch-config #elasticsearch config
       node.roles: 
         - master
         - ingest
@@ -153,8 +134,6 @@ spec:
         - transform
         - data_cold
       node.attr.temp: cold
-    config: 
-      <<: *common-elastisearch-config #common elasticsearch config
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -172,13 +151,6 @@ spec:
           co.elastic.logs/enabled: "true"
       spec:
         initContainers:
-          - name: install-plugins
-            command:
-            - sh
-            - -c
-            - |
-              /usr/share/elasticsearch/bin/elasticsearch-plugin list | grep repository-s3
-              [[ $? -ne 0 ]] && /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch repository-s3 || true
           - name: sysctl
             securityContext:
               privileged: true
@@ -195,15 +167,8 @@ spec:
               limits:
                 memory: 2Gi
                 cpu: 2
-        affinity:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: temp
-                  operator: In
-                  values:
-                  - warm
+        nodeSelector: 
+          temp: warm
 ---
 apiVersion: v1
 kind: Secret

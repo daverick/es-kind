@@ -6,9 +6,9 @@ echo "Deleting a kind cluster named elastic..."
 echo "Creating a kind cluster named elastic..."
 ./kind create cluster --config kind-config.yaml --name elastic
 
-echo "Applying ECK crds 2.3.0 ..."
+echo "Applying ECK crds 2.4.0 ..."
 kubectl apply -f crds.yaml 
-echo "Applying ECK operator 2.3.0 ..."
+echo "Applying ECK operator 2.4.0 ..."
 kubectl apply -f operator.yaml 
 
 kubectl wait --timeout=60s --for condition=ready pod --selector='control-plane=elastic-operator' --namespace elastic-system
@@ -75,5 +75,11 @@ echo "Getting password and creatin port-forward for monitoring cluster..."
 echo "Applying heartbeat.yaml ..."
 kubectl apply -f heartbeat.yaml
 
-echo "Applying metricbeat.yaml ..."
-kubectl apply -f metricbeat.yaml
+echo "Adding a Fleet server"
+kubectl apply -f "Fleet & agents/fleet-server-managed.yml"
+
+echo "Adding a metric server"
+kubectl  apply -f metric-server.yaml
+
+# echo "Applying metricbeat.yaml ..."
+# kubectl apply -f metricbeat.yaml
