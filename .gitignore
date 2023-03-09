@@ -4,3 +4,6 @@ es-kind.code-workspace
 eck-operator*
 crds.yaml
 operator.yaml
+eck-diag
+eck-diagnostics
+.*

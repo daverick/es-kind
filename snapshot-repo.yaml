@@ -1,0 +1,29 @@
+apiVersion: stackconfigpolicy.k8s.elastic.co/v1alpha1
+kind: StackConfigPolicy
+metadata:
+  name: stack-config-snapshot-repo
+  # namespace: elastic-system or test-namespace
+spec:
+  resourceSelector:
+    matchLabels:
+      cluster.name: elasticsearch
+  elasticsearch:
+    snapshotRepositories:
+      snapshots-on-minio:
+        type: s3
+        settings:
+          bucket: elasticsearch-snapshots
+          client: my-minio
+    snapshotLifecyclePolicies:
+      hourly-snapshots:
+        schedule: "0 0 * * * ?"
+        name: "<hourly-snapshots-{now/h}>"
+        repository: snapshots-on-minio
+        config:
+          indices: ["*"]
+          ignore_unavailable: true
+          include_global_state: false
+        retention:
+          expire_after: "2d"
+          min_count: 1
+          max_count: 50

@@ -6,9 +6,9 @@ echo "Deleting a kind cluster named elastic..."
 echo "Creating a kind cluster named elastic..."
 ./kind create cluster --config kind-config.yaml --name elastic
 
-echo "Applying ECK crds 2.4.0 ..."
+echo "Applying ECK crds 2.6.1 ..."
 kubectl apply -f crds.yaml 
-echo "Applying ECK operator 2.4.0 ..."
+echo "Applying ECK operator 2.6.1 ..."
 kubectl apply -f operator.yaml 
 
 kubectl wait --timeout=60s --for condition=ready pod --selector='control-plane=elastic-operator' --namespace elastic-system

@@ -2,8 +2,10 @@ apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
   name: elasticsearch
+  labels:
+    cluster.name: "elasticsearch"
 spec:
-  version: 8.4.0
+  version: 8.6.2
   secureSettings:
   - secretName: minio
   monitoring:
@@ -33,11 +35,6 @@ spec:
       s3.client.my-minio.protocol: http 
       s3.client.my-minio.path_style_access: true
     podTemplate:
-      metadata:
-        labels:
-          scrape: es
-        annotations:
-          co.elastic.logs/enabled: "true"
       spec:
         initContainers:
           - name: sysctl
@@ -98,11 +95,6 @@ spec:
           requests:
             storage: 1Gi
     podTemplate:
-      metadata:
-        labels:
-          scrape: es
-        annotations:
-          co.elastic.logs/enabled: "true"
       spec:
         initContainers:
           - name: sysctl
@@ -144,11 +136,6 @@ spec:
           requests:
             storage: 1Gi
     podTemplate:
-      metadata:
-        labels:
-          scrape: es
-        annotations:
-          co.elastic.logs/enabled: "true"
       spec:
         initContainers:
           - name: sysctl

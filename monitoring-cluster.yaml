@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: monitoring-cluster
 spec:
-  version: 8.4.0
+  version: 8.6.2
   nodeSets:
   - name: main
     count: 1
@@ -49,7 +49,7 @@ kind: Kibana
 metadata:
   name: monitoring-kibana
 spec:
-  version: 8.4.0
+  version: 8.6.2
   count: 1
   elasticsearchRef:
     name: monitoring-cluster
