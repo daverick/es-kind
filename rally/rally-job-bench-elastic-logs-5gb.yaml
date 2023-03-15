@@ -1,0 +1,88 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bench-elastic-logs-5gb
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: esrally
+        image: elastic/rally:2.7.1
+        resources:
+          requests:
+            memory: 2Gi
+            cpu: 2000m
+        command: 
+        - sh
+        - -c
+        - |
+          CLIENT_OPTIONS="use_ssl:true,verify_certs:false,basic_auth_user:'elastic',basic_auth_password:'"$ELASTICSEARCH_PASSWORD"'"
+          esrally race --track=elastic/logs  --challenge=logging-indexing --track-params=/params/params-file.json --pipeline=benchmark-only --target-hosts="$ELASTICSEARCH_URL" --client-options=$CLIENT_OPTIONS
+        env:
+        - name: 'ELASTICSEARCH_URL'
+          value: "elasticsearch-es-http.default.svc"
+        - name: 'ELASTICSEARCH_PASSWORD'
+          valueFrom:
+            secretKeyRef:
+              name: elasticsearch-es-elastic-user
+              key: elastic
+        volumeMounts:
+        - name: rally-benchmarks
+          mountPath: "/mnt/elastic-internal/rally-benchmarks" 
+        - name: rally-params-file
+          mountPath: "/params"   
+        - name: rally-ini-file
+          mountPath: "/rally/.rally/rally.ini" 
+          subPath: rally.ini        
+      volumes:
+      - name: rally-benchmarks
+        persistentVolumeClaim:
+          claimName: rally-benchmarks-volume
+      - name: rally-params-file
+        configMap:
+          name: rally-params-file
+      - name: rally-ini-file
+        configMap:
+          name: rally-ini-file
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rally-params-file
+  namespace: default
+data:
+  params-file.json: |
+    {
+      "number_of_replicas": 1,
+      "number_of_shards": 1,
+      "max_total_download_gb": 5,
+      "raw_data_volume_per_day": "5GB"
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rally-ini-file
+  namespace: default
+data:
+  rally.ini: |
+    [meta]
+      config.version = 17
+    [tracks]
+      default.url = https://github.com/elastic/rally-tracks
+    [system]
+      env.name = local
+    [reporting]
+      datastore.type = elasticsearch
+      datastore.host = monitoring-cluster-es-http.default.svc
+      datastore.port = 9200
+      datastore.secure = true
+      datastore.ssl.verification_mode = none
+      datastore.user = elastic
+      datastore.password = 4d42ZDLfB40ifK8q4U8N11vY
+    [node]
+      root.dir = /mnt/elastic-internal/rally-benchmarks
+      src.root.dir =  /mnt/elastic-internal/rally-benchmarks/src
+    [benchmarks]
+      local.dataset.cache = /mnt/elastic-internal/rally-benchmarks/data
