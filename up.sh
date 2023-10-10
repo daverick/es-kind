@@ -72,14 +72,14 @@ echo "Getting password and creatin port-forward ..."
 echo "Getting password and creatin port-forward for monitoring cluster..."
 ./port-forward_and_password-monitoring-cluster.sh
 
-echo "Applying heartbeat.yaml ..."
-kubectl apply -f heartbeat.yaml
+#echo "Applying heartbeat.yaml ..."
+#kubectl apply -f heartbeat.yaml
 
-echo "Adding a Fleet server"
-kubectl apply -f "Fleet & agents/fleet-server-managed.yml"
+#echo "Adding a Fleet server"
+#kubectl apply -f "Fleet & agents/fleet-server-managed.yml"
 
-echo "Adding a metric server"
-kubectl  apply -f metric-server.yaml
+#echo "Adding a metric server"
+#kubectl  apply -f metric-server.yaml
 
 # echo "Applying metricbeat.yaml ..."
 # kubectl apply -f metricbeat.yaml

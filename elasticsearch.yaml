@@ -5,7 +5,7 @@ metadata:
   labels:
     cluster.name: "elasticsearch"
 spec:
-  version: 8.6.2
+  version: 8.8.1
   secureSettings:
   - secretName: minio
   monitoring:
@@ -15,17 +15,16 @@ spec:
     logs:
       elasticsearchRefs:
       - name: monitoring-cluster
+  auth:
+    roles:
+    - secretName: roles-secret
   nodeSets:
   - name: hot
     count: 2
     config:  &elastisearch-config #elasticsearch config
       node.roles: 
-        - master
         - ingest
-        - ml
-        - transform
         - data_hot
-        - remote_cluster_client
       node.attr.temp: hot
       xpack.ml.enabled: true
       node.store.allow_mmap: false
@@ -78,12 +77,11 @@ spec:
     config:
       <<: *elastisearch-config #elasticsearch config
       node.roles: 
-        - master
-        - ingest
-        - ml
-        - transform
         - data_content
         - data_warm
+        - ml
+        - transform
+        - remote_cluster_client
       node.attr.temp: warm
     volumeClaimTemplates:
     - metadata:
@@ -116,14 +114,10 @@ spec:
         nodeSelector: 
           temp: warm
   - name: cold
-    count: 2
+    count: 0
     config:  
       <<: *elastisearch-config #elasticsearch config
       node.roles: 
-        - master
-        - ingest
-        - ml
-        - transform
         - data_cold
       node.attr.temp: cold
     volumeClaimTemplates:
@@ -156,6 +150,31 @@ spec:
                 cpu: 2
         nodeSelector: 
           temp: warm
+  - name: master
+    count: 3
+    config:  
+      <<: *elastisearch-config #elasticsearch config
+      node.roles: 
+        - master
+    podTemplate:
+      spec:
+        initContainers:
+          - name: sysctl
+            securityContext:
+              privileged: true
+            command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        containers:
+          - name: elasticsearch
+            env:
+            - name: ES_JAVA_OPTS
+              value: -Xms512m -Xmx512m
+            resources:
+              requests:
+                memory: 1Gi
+                cpu: 0.5
+              limits:
+                memory: 1Gi
+                cpu: 1
 ---
 apiVersion: v1
 kind: Secret

@@ -8,9 +8,6 @@ spec:
   elasticsearchRef:
     name: elasticsearch
   monitoring:
-    metrics:
-      elasticsearchRefs:
-      - name: monitoring-cluster
     logs:
       elasticsearchRefs:
       - name: monitoring-cluster
@@ -336,10 +333,8 @@ spec:
       - name: kibana
         resources:
           requests:
-            memory: 1Gi
+            memory: 2Gi
             cpu: 0.5
           limits:
-            memory: 1Gi
+            memory: 2Gi
             cpu: 2
-
-
