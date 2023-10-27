@@ -3,12 +3,15 @@ kind: Kibana
 metadata:
   name: kibana
 spec:
-  version: 8.6.2
+  version: 8.10.3
   count: 1
   elasticsearchRef:
     name: elasticsearch
   monitoring:
     logs:
+      elasticsearchRefs:
+      - name: monitoring-cluster
+    metrics:
       elasticsearchRefs:
       - name: monitoring-cluster
   config:

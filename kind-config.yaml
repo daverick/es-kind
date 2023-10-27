@@ -10,7 +10,7 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "temp=warm"
+          node-labels: "beta.kubernetes.io/instance-type=highstorage,topology.kubernetes.io/zone=az1"
   image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
 - role: worker
   kubeadmConfigPatches:
@@ -18,7 +18,7 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "temp=warm"
+          node-labels: "beta.kubernetes.io/instance-type=highstorage,topology.kubernetes.io/zone=az2"
   image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
 - role: worker
   kubeadmConfigPatches:
@@ -26,7 +26,7 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "temp=hot"
+          node-labels: "beta.kubernetes.io/instance-type=highio,topology.kubernetes.io/zone=az1"
   image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
 - role: worker
   kubeadmConfigPatches:
@@ -34,7 +34,7 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "temp=hot"
+          node-labels: "beta.kubernetes.io/instance-type=highio,topology.kubernetes.io/zone=az2"
   image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
 - role: worker
   kubeadmConfigPatches:
@@ -42,5 +42,5 @@ nodes:
       kind: JoinConfiguration
       nodeRegistration:
         kubeletExtraArgs:
-          node-labels: "temp=hot"
+          node-labels: "beta.kubernetes.io/instance-type=highio,topology.kubernetes.io/zone=az1"
   image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
