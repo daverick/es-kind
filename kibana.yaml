@@ -3,7 +3,7 @@ kind: Kibana
 metadata:
   name: kibana
 spec:
-  version: 8.10.3
+  version: 8.14.3
   count: 1
   elasticsearchRef:
     name: elasticsearch
@@ -45,20 +45,20 @@ spec:
         id: fleet_server-1
         package:
           name: fleet_server
-    # - name: K8s Observability (daemonSet) policy
-    #   id: k8s-observability-ds
-    #   namespace: default
-    #   monitoring_enabled:
-    #   - logs
-    #   - metrics
-    #   unenroll_timeout: 900
-    #   package_policies:
-    #   - package:
-    #       name: system
-    #     name: system-1
-    #   - package:
-    #       name: kubernetes
-    #     name: kubernetes-ds
+    - name: K8s Observability (daemonSet) policy
+      id: k8s-observability-ds
+      namespace: default
+      monitoring_enabled:
+      - logs
+      - metrics
+      unenroll_timeout: 900
+      package_policies:
+      - package:
+          name: system
+        name: system-1
+      - package:
+          name: kubernetes
+        name: kubernetes-ds
     # - name: K8s Observability (metrics) policy
     #   id: k8s-observability-metrics
     #   namespace: default

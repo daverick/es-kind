@@ -7,7 +7,7 @@ metadata:
   annotations:
     eck.k8s.elastic.co/downward-node-labels: "topology.kubernetes.io/zone"
 spec:
-  version: 8.10.3
+  version: 8.14.3
   secureSettings:
   - secretName: minio
   monitoring:

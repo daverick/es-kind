@@ -4,13 +4,14 @@ metadata:
   name: fleet-server
   namespace: default
 spec:
-  version: 8.4.0
+  version: 8.14.3
   kibanaRef:
     name: kibana
   elasticsearchRefs:
   - name: elasticsearch
   mode: fleet
   fleetServerEnabled: true
+  policyID: eck-fleet-server
   deployment:
     replicas: 1
     podTemplate:
