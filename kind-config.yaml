@@ -3,7 +3,7 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+  image: localhost:5000/kindest/node:v1.30.0
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -11,7 +11,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "beta.kubernetes.io/instance-type=highstorage,topology.kubernetes.io/zone=az1"
-  image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+  image: localhost:5000/kindest/node:v1.30.0
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -19,7 +19,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "beta.kubernetes.io/instance-type=highstorage,topology.kubernetes.io/zone=az2"
-  image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+  image: localhost:5000/kindest/node:v1.30.0
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -27,7 +27,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "beta.kubernetes.io/instance-type=highio,topology.kubernetes.io/zone=az1"
-  image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+  image: localhost:5000/kindest/node:v1.30.0
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -35,7 +35,7 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "beta.kubernetes.io/instance-type=highio,topology.kubernetes.io/zone=az2"
-  image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+  image: localhost:5000/kindest/node:v1.30.0
 - role: worker
   kubeadmConfigPatches:
     - |
@@ -43,4 +43,4 @@ nodes:
       nodeRegistration:
         kubeletExtraArgs:
           node-labels: "beta.kubernetes.io/instance-type=highio,topology.kubernetes.io/zone=az1"
-  image: kindest/node:v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+  image: localhost:5000/kindest/node:v1.30.0
