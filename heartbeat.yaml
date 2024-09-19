@@ -4,7 +4,7 @@ metadata:
   name: heartbeat
 spec:
   type: heartbeat
-  version: 7.17.5
+  version: 8.15.1
   elasticsearchRef:
     name: elasticsearch
   config:
@@ -12,16 +12,31 @@ spec:
       enabled: true
       host: 0.0.0.0
     heartbeat.monitors:
-    - type: tcp
+    - type: http
       schedule: '@every 5s'
-      hosts: ["elasticsearch-es-http.default.svc:9200"]
-      id: elasticsearch
-      name: elasticsearch
-    - type: tcp
+      hosts: ["https://elasticsearch-es-http.default.svc:9200"]
+      id: http-monitor-1-id
+      name: http-monitor-1-name
+    - type: http
       schedule: '@every 5s'
-      hosts: ["kibana-kb-http.default.svc:5601"]
-      id: kibana
-      name: kibana
+      hosts: ["https://kibana-kb-http.default.svc:5601"]
+      id: http-monitor-2-id
+      name: http-monitor-2-name
+    - type: http
+      schedule: '@every 300'
+      hosts: ["https://elastic.co"]
+      id: http-monitor-3-id
+      name: http-monitor-3-name
+    heartbeat.run_from:
+      id: my-custom-geo
+      geo:
+        name: nyc-dc1-rack2
+        location: 40.7128, -74.0060
+        continent_name: North America
+        country_iso_code: US
+        region_name: New York (Region)
+        region_iso_code: NY
+        city_name: New York (City)
   deployment:
     podTemplate:
       metadata:

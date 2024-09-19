@@ -7,7 +7,7 @@ metadata:
   annotations:
     eck.k8s.elastic.co/downward-node-labels: "topology.kubernetes.io/zone"
 spec:
-  version: 8.14.3
+  version: 8.15.1
   secureSettings:
   - secretName: minio
   monitoring:
@@ -23,7 +23,7 @@ spec:
   nodeSets:
   - name: hot
     count: 2
-    config:  &elastisearch-config #elasticsearch config
+    config: &elastisearch-config #elasticsearch config
       node.roles: 
         - ingest
         - data_hot
@@ -38,6 +38,10 @@ spec:
       s3.client.my-minio.protocol: http 
       s3.client.my-minio.path_style_access: true
     podTemplate:
+      metadata:
+        annotations:
+          elastic.co/namespace: lab
+          elastic.co/dataset: elasticsearch
       spec:
         initContainers:
           - name: sysctl
@@ -103,6 +107,10 @@ spec:
           requests:
             storage: 1Gi
     podTemplate:
+      metadata:
+        annotations:
+          elastic.co/namespace: lab
+          elastic.co/dataset: elasticsearch
       spec:
         initContainers:
           - name: sysctl
@@ -157,6 +165,10 @@ spec:
           requests:
             storage: 1Gi
     podTemplate:
+      metadata:
+        annotations:
+          elastic.co/namespace: lab
+          elastic.co/dataset: elasticsearch
       spec:
         initContainers:
           - name: sysctl
@@ -184,6 +196,10 @@ spec:
       node.roles: 
         - master
     podTemplate:
+      metadata:
+        annotations:
+          elastic.co/namespace: lab
+          elastic.co/dataset: elasticsearch
       spec:
         initContainers:
           - name: sysctl
@@ -219,8 +235,12 @@ spec:
       node.roles: 
         - master
         - voting_only
-      node.attr.zone: null
+      node.attr.zone: az1
     podTemplate:
+      metadata:
+        annotations:
+          elastic.co/namespace: lab
+          elastic.co/dataset: elasticsearch
       spec:
         initContainers:
           - name: sysctl
